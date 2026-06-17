@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<body>
+<div th:fragment="statusCard" class="card-body gap-4">
+    <div class="flex items-start justify-between gap-4">
+        <div>
+            <p class="text-sm uppercase tracking-widest opacity-60">Live status</p>
+            <h2 class="card-title text-2xl">Your scaffold is ready</h2>
+        </div>
+        <div class="badge badge-success badge-lg">Running</div>
+    </div>
+
+    <p class="text-base leading-7 opacity-80" th:text="${statusMessage}">
+        The MVC shell is live and ready for feature work.
+    </p>
+
+    <div class="stats stats-vertical bg-base-200 shadow sm:stats-horizontal">
+        <div class="stat">
+            <div class="stat-title">Server</div>
+            <div class="stat-value text-primary text-lg">Spring Boot</div>
+            <div class="stat-desc">Thymeleaf rendering enabled</div>
+        </div>
+        <div class="stat">
+            <div class="stat-title">Loaded at</div>
+            <div class="stat-value text-lg" th:text="${updatedAt}">Just now</div>
+            <div class="stat-desc">Updated through HTMX</div>
+        </div>
+    </div>
+
+    <div class="card-actions justify-end">
+        <button class="btn btn-primary btn-sm"
+                hx-get="/partials/status"
+                hx-target="#status-panel"
+                hx-swap="innerHTML">
+            Refresh panel
+        </button>
+    </div>
+</div>
+</body>
+</html>
+

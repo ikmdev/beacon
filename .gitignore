@@ -228,3 +228,5 @@ Temporary Items
 ###################
 **.zip
 htmlReport
+/node
+/node_modules

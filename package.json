@@ -1,0 +1,31 @@
+{
+  "name": "beacon",
+  "version": "1.0.0",
+  "description": "Beacon is a Spring Boot MVC web app scaffold that uses:",
+  "main": "index.js",
+  "directories": {
+    "doc": "doc"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build:css": "npx @tailwindcss/cli -i ./src/main/resources/static/css/input.css -o ./src/main/resources/static/css/app.css",
+    "watch:css": "npx @tailwindcss/cli -i ./src/main/resources/static/css/input.css -o ./src/main/resources/static/css/app.css --watch"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ikmdev/beacon.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "bugs": {
+    "url": "https://github.com/ikmdev/beacon/issues"
+  },
+  "homepage": "https://github.com/ikmdev/beacon#readme",
+  "devDependencies": {
+    "@tailwindcss/cli": "^4.3.1",
+    "daisyui": "^5.5.23",
+    "tailwindcss": "^4.3.1"
+  }
+}
