@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html lang="en"
       xmlns:th="http://www.thymeleaf.org"
+      th:fragment="layout(activePage, content, hasNotifications)"
       x-data="{ darkMode: false }"
       x-init="darkMode = localStorage.theme === 'night'; document.documentElement.setAttribute('data-theme', darkMode ? 'night' : 'corporate')"
       data-theme="corporate">
@@ -12,179 +13,74 @@
     <script src="https://unpkg.com/htmx.org@2.0.10"></script>
     <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
 </head>
-<body class="min-h-screen bg-base-200 text-base-content antialiased">
+<body hx-boost="true" class="min-h-screen bg-base-200 text-base-content antialiased">
 <div class="flex min-h-screen flex-col">
-    <header class="sticky top-0 z-30 border-b border-base-300 bg-base-100/90 backdrop-blur">
+    <header id="header" class="sticky top-0 z-30 border-b border-base-300 bg-base-100/90 backdrop-blur">
         <div class="navbar mx-auto w-full max-w-7xl px-4 sm:px-6">
-            <div class="navbar-start gap-2">
+            <div class="navbar-start">
                 <div class="dropdown">
-                    <label tabindex="0" class="btn btn-ghost btn-sm lg:hidden" aria-label="Open menu">
-                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/>
+                    <label tabindex="0" role="button" class="btn btn-ghost lg:hidden">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24"
+                             stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                  d="M4 6h16M4 12h16M4 18h7"/>
                         </svg>
                     </label>
-                    <ul tabindex="0" class="menu dropdown-content menu-sm mt-3 w-56 rounded-2xl border border-base-300 bg-base-100 p-2 shadow-lg">
-                        <li><a href="#top">Home</a></li>
-                        <li><a href="#features">Features</a></li>
-                        <li><a href="#status">Live status</a></li>
-                        <li><a href="#footer">Footer</a></li>
+                    <ul tabindex="0"
+                        class="menu menu-sm dropdown-content bg-base-100 rounded-box z-[1] mt-3 w-52 p-2 shadow">
+                        <li th:classappend="${activePage == 'home' ? 'active bg-primary text-primary-content rounded-full' : ''}"><a href="/">Home</a>
+                        </li>
+                        <li th:classappend="${activePage == 'configuration' ? 'active bg-primary text-primary-content rounded-full' : ''}"><a
+                                href="/configuration">Configuration</a></li>
                     </ul>
                 </div>
-                <a class="btn btn-ghost gap-2 px-2 text-lg normal-case sm:text-xl" href="#top">
-                    <span class="inline-block h-2.5 w-2.5 rounded-full bg-primary"></span>
-                    Beacon
+                <div class="hidden lg:flex">
+                    <ul class="menu menu-horizontal px-1 text-sm">
+                        <li th:classappend="${activePage == 'home' ? 'active bg-primary text-primary-content rounded-full' : ''}"><a href="/">Home</a>
+                        </li>
+                        <li th:classappend="${activePage == 'configuration' ? 'active bg-primary text-primary-content rounded-full' : ''}"><a
+                                href="/configuration">Configuration</a></li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="navbar-center">
+                <a href="/" class="text-xl">
+                    <img src="/images/beacon_logo.png" alt="Beacon" class="h-6 w-auto">
                 </a>
             </div>
 
-            <div class="navbar-center hidden lg:flex">
-                <ul class="menu menu-horizontal rounded-full border border-base-300 bg-base-100/70 px-2 text-sm">
-                    <li><a href="#top" class="font-medium">Home</a></li>
-                    <li><a href="#features">Features</a></li>
-                    <li><a href="#status">Live status</a></li>
-                    <li><a href="#footer">Footer</a></li>
-                </ul>
-            </div>
-
-            <div class="navbar-end gap-2">
-                <button type="button"
-                        class="btn btn-ghost btn-sm"
-                        @click="darkMode = !darkMode; localStorage.theme = darkMode ? 'night' : 'corporate'; document.documentElement.setAttribute('data-theme', localStorage.theme)">
-                    <svg x-show="!darkMode" xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
-                        <path d="M10 2a1 1 0 011 1v1.07a7 7 0 015.93 5.93H18a1 1 0 110 2h-1.07A7 7 0 0111 16.93V18a1 1 0 11-2 0v-1.07A7 7 0 013.07 12H2a1 1 0 110-2h1.07A7 7 0 019 4.07V3a1 1 0 011-1zm0 4a4 4 0 100 8 4 4 0 000-8z"/>
+            <div class="navbar-end">
+                <button class="btn btn-ghost btn-circle" aria-label="Search">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24"
+                         stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                              d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/>
                     </svg>
-                    <svg x-show="darkMode" xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor" style="display:none;">
-                        <path d="M17.293 13.293A8 8 0 016.707 2.707a8.001 8.001 0 1010.586 10.586z"/>
-                    </svg>
-                    <span class="hidden sm:inline">Theme</span>
                 </button>
-                <a href="#status" class="btn btn-primary btn-sm hidden sm:inline-flex">Try HTMX</a>
+                <button class="btn btn-ghost btn-circle" aria-label="View notifications">
+                    <div class="indicator">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24"
+                             stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                  d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"/>
+                        </svg>
+                        <span th:if="${hasNotifications}" class="badge badge-xs badge-primary indicator-item"></span>
+                    </div>
+                </button>
             </div>
         </div>
     </header>
 
-    <main id="top" class="flex-1">
-        <section id="status" class="hero hero-gradient px-4 py-12 sm:px-6 lg:py-20">
-            <div class="hero-content w-full max-w-7xl flex-col gap-8 lg:flex-row-reverse lg:gap-12">
-                <div class="w-full max-w-xl">
-                    <div class="badge badge-primary badge-lg mb-4">Spring Boot MVC Scaffold</div>
-                    <h1 class="text-3xl font-bold tracking-tight sm:text-4xl lg:text-6xl">A clean starter for HTMX, DaisyUI, and AlpineJS</h1>
-                    <p class="py-5 text-base leading-7 opacity-90 sm:text-lg sm:leading-8">
-                        This home page gives you a polished top navigation, a dynamic HTMX-loaded status card,
-                        and Alpine-powered theme switching so you can start building features immediately.
-                    </p>
-                    <div class="flex flex-col gap-3 sm:flex-row sm:flex-wrap">
-                        <a href="#features" class="btn btn-secondary w-full sm:w-auto">Explore features</a>
-                        <button class="btn btn-outline w-full sm:w-auto" hx-get="/partials/status" hx-target="#status-panel" hx-swap="innerHTML">
-                            Refresh status
-                        </button>
-                    </div>
-                </div>
-
-                <div id="status-panel"
-                     class="card w-full max-w-xl bg-base-100 shadow-md"
-                     hx-get="/partials/status"
-                     hx-trigger="load"
-                     hx-swap="innerHTML">
-                    <div class="card-body gap-4">
-                        <div class="skeleton h-6 w-32"></div>
-                        <div class="skeleton h-4 w-full"></div>
-                        <div class="skeleton h-4 w-5/6"></div>
-                        <div class="skeleton h-24 w-full"></div>
-                    </div>
-                </div>
-            </div>
-        </section>
-
-        <section id="features" class="mx-auto w-full max-w-7xl px-4 py-14 sm:px-6 lg:py-16">
-            <div class="mb-8 max-w-3xl">
-                <h2 class="text-3xl font-bold">What is included</h2>
-                <p class="mt-3 text-base leading-7 opacity-80">
-                    A solid foundation for building modern server-rendered pages with just enough interactivity.
-                </p>
-            </div>
-
-            <div class="grid gap-6 md:grid-cols-3">
-                <article class="card feature-card bg-base-100 shadow-md">
-                    <div class="card-body">
-                        <h3 class="card-title">HTMX</h3>
-                        <p>Swap partial HTML over the wire without a frontend framework.</p>
-                    </div>
-                </article>
-                <article class="card feature-card bg-base-100 shadow-md">
-                    <div class="card-body">
-                        <h3 class="card-title">DaisyUI</h3>
-                        <p>Use prebuilt, Tailwind-friendly UI components for a polished look fast.</p>
-                    </div>
-                </article>
-                <article class="card feature-card bg-base-100 shadow-md">
-                    <div class="card-body">
-                        <h3 class="card-title">AlpineJS</h3>
-                        <p>Add lightweight client-side behavior like theme switching and menus.</p>
-                    </div>
-                </article>
-            </div>
-        </section>
+    <main id="main" class="flex-1 py-10">
+        <div class="mx-auto max-w-7xl px-4 sm:px-6">
+            <th:block th:replace="${content}"></th:block>
+        </div>
     </main>
 
     <footer id="footer" class="footer-shell border-t border-base-300 px-4 py-12 text-base-content sm:px-6">
-        <div class="mx-auto w-full max-w-7xl">
-            <section class="mb-10 rounded-2xl border border-base-300 bg-base-100/80 p-6 shadow-md lg:flex lg:items-center lg:justify-between lg:p-8">
-                <div class="max-w-2xl">
-                    <p class="text-sm font-semibold uppercase tracking-widest text-primary">Ship faster</p>
-                    <h3 class="mt-2 text-2xl font-bold sm:text-3xl">Start building production pages with this scaffold</h3>
-                    <p class="mt-3 opacity-80">Use MVC rendering where it makes sense, sprinkle HTMX for interactivity, and keep JavaScript small.</p>
-                </div>
-                <div class="mt-5 flex flex-col gap-3 sm:flex-row lg:mt-0">
-                    <a class="btn btn-primary" href="#status">View live panel</a>
-                    <a class="btn btn-outline" href="#features">See included features</a>
-                </div>
-            </section>
 
-            <div class="grid gap-10 sm:grid-cols-2 lg:grid-cols-4">
-                <aside>
-                    <a class="inline-flex items-center gap-2 text-xl font-semibold" href="#top">
-                        <span class="inline-block h-2.5 w-2.5 rounded-full bg-primary"></span>
-                        Beacon
-                    </a>
-                    <p class="mt-4 max-w-sm text-sm leading-6 opacity-80">
-                        Spring Boot MVC starter with a modern top nav, dynamic status panel, and polished UI primitives.
-                    </p>
-                </aside>
-
-                <nav>
-                    <h4 class="footer-title">Navigate</h4>
-                    <a class="footer-link" href="#top">Home</a>
-                    <a class="footer-link" href="#features">Features</a>
-                    <a class="footer-link" href="#status">Live status</a>
-                </nav>
-
-                <nav>
-                    <h4 class="footer-title">Stack</h4>
-                    <a class="footer-link" href="https://spring.io/projects/spring-boot" target="_blank" rel="noreferrer">Spring Boot</a>
-                    <a class="footer-link" href="https://htmx.org" target="_blank" rel="noreferrer">HTMX</a>
-                    <a class="footer-link" href="https://alpinejs.dev" target="_blank" rel="noreferrer">AlpineJS</a>
-                </nav>
-
-                <nav>
-                    <h4 class="footer-title">UI Resources</h4>
-                    <a class="footer-link" href="https://tailwindcss.com" target="_blank" rel="noreferrer">Tailwind CSS</a>
-                    <a class="footer-link" href="https://daisyui.com" target="_blank" rel="noreferrer">DaisyUI</a>
-                    <a class="footer-link" href="https://github.com/ikmdev/repo-seed/issues" target="_blank" rel="noreferrer">Issue tracker</a>
-                </nav>
-            </div>
-
-            <div class="mt-10 flex flex-col gap-4 border-t border-base-300 pt-6 text-sm opacity-75 sm:flex-row sm:items-center sm:justify-between">
-                <p>2026 Beacon. Built with Spring Boot MVC.</p>
-                <div class="flex items-center gap-4">
-                    <a class="footer-link m-0" href="https://htmx.org" target="_blank" rel="noreferrer">HTMX</a>
-                    <a class="footer-link m-0" href="https://daisyui.com" target="_blank" rel="noreferrer">DaisyUI</a>
-                    <a class="footer-link m-0" href="https://alpinejs.dev" target="_blank" rel="noreferrer">AlpineJS</a>
-                </div>
-            </div>
-        </div>
     </footer>
 </div>
 </body>
 </html>
-
-

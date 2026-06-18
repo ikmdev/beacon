@@ -1,4 +1,4 @@
-package dev.ikm.beacon.home;
+package dev.ikm.beacon.web.home;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -14,16 +14,12 @@ public class HomeController {
     private static final DateTimeFormatter STATUS_TIMESTAMP = DateTimeFormatter.ofPattern("MMMM d, yyyy 'at' h:mm:ss a");
 
     @GetMapping("/")
-    public String home(Model model) {
+    public String getHomePage(Model model) {
         model.addAttribute("pageTitle", "Beacon Home");
-        return "index";
-    }
-
-    @GetMapping(value = "/partials/status", produces = MediaType.TEXT_HTML_VALUE)
-    public String statusPanel(Model model) {
-        model.addAttribute("statusMessage", "The MVC shell is live and ready for feature work.");
-        model.addAttribute("updatedAt", LocalDateTime.now().format(STATUS_TIMESTAMP));
-        return "fragments/status-card :: statusCard";
+        model.addAttribute("activePage", "home");
+        boolean newNotifications = false; // Set to true or false
+        model.addAttribute("hasNotifications", newNotifications);
+        return "home";
     }
 }
 
