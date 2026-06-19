@@ -1,14 +1,14 @@
 <html xmlns:th="http://www.thymeleaf.org"
-      th:replace="~{index :: layout(${activePage}, ~{::configuration-content}, ${hasNotifications})}">
+      th:replace="~{index :: layout(${activePage}, ~{::define-content}, ${hasNotifications})}">
 
-<div th:fragment="configuration-content">
+<div th:fragment="define-content">
     <!-- Use a Hero component for a big welcome -->
     <div class="hero rounded-2xl bg-base-100 shadow-xl">
         <div class="hero-content text-center">
             <div class="max-w-md">
                 <h1 class="text-5xl font-bold">Welcome to Beacon</h1>
                 <p class="py-6">
-                    This is the configuration page for the Beacon application.
+                    This is the Define landing page for the Beacon application.
                     Explore the features using the navigation above.
                 </p>
                 <button class="btn btn-primary">Get Started</button>
