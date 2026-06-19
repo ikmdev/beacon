@@ -9,7 +9,8 @@
     <meta charset="UTF-8"/>
     <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
     <title th:text="${pageTitle}">Beacon Home</title>
-    <link rel="stylesheet" href="/css/app.css"/>
+    <link rel="stylesheet" th:href="@{/css/app.css}" />
+    <link rel="icon" type="image/png" href="/images/beacon_logo.png">
     <script src="https://unpkg.com/htmx.org@2.0.10"></script>
     <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
 </head>
@@ -28,30 +29,40 @@
                     </label>
                     <ul tabindex="0"
                         class="menu menu-sm dropdown-content bg-base-100 rounded-box z-[1] mt-3 w-52 p-2 shadow">
-                        <li th:classappend="${activePage == 'home' ? 'active bg-primary text-primary-content rounded-full' : ''}"><a href="/">Home</a>
+                        <li th:classappend="${activePage == 'home' ? 'active bg-primary text-primary-content rounded-full' : ''}">
+                            <a href="/">Home</a>
                         </li>
-                        <li th:classappend="${activePage == 'define' ? 'active bg-primary text-primary-content rounded-full' : ''}"><a
-                                href="/define">Define</a></li>
-                        <li th:classappend="${activePage == 'configure' ? 'active bg-primary text-primary-content rounded-full' : ''}"><a
-                                href="/configure">Configure</a></li>
-                        <li th:classappend="${activePage == 'evaluate' ? 'active bg-primary text-primary-content rounded-full' : ''}"><a
-                                href="/evaluate">Evaluate</a></li>
-                        <li th:classappend="${activePage == 'analyze' ? 'active bg-primary text-primary-content rounded-full' : ''}"><a
-                                href="/analyze">Analyze</a></li>
+                        <li th:classappend="${activePage == 'define' ? 'active bg-primary text-primary-content rounded-full' : ''}">
+                            <a
+                                    href="/define">Define</a></li>
+                        <li th:classappend="${activePage == 'configure' ? 'active bg-primary text-primary-content rounded-full' : ''}">
+                            <a
+                                    href="/configure">Configure</a></li>
+                        <li th:classappend="${activePage == 'evaluate' ? 'active bg-primary text-primary-content rounded-full' : ''}">
+                            <a
+                                    href="/evaluate">Evaluate</a></li>
+                        <li th:classappend="${activePage == 'analyze' ? 'active bg-primary text-primary-content rounded-full' : ''}">
+                            <a
+                                    href="/analyze">Analyze</a></li>
                     </ul>
                 </div>
                 <div class="hidden lg:flex">
                     <ul class="menu menu-horizontal px-1 text-sm">
-                        <li th:classappend="${activePage == 'home' ? 'active bg-primary text-primary-content rounded-full' : ''}"><a href="/">Home</a>
+                        <li th:classappend="${activePage == 'home' ? 'active bg-primary text-primary-content rounded-full' : ''}">
+                            <a href="/">Home</a>
                         </li>
-                        <li th:classappend="${activePage == 'define' ? 'active bg-primary text-primary-content rounded-full' : ''}"><a
-                                href="/define">Define</a></li>
-                        <li th:classappend="${activePage == 'configure' ? 'active bg-primary text-primary-content rounded-full' : ''}"><a
-                                href="/configure">Configure</a></li>
-                        <li th:classappend="${activePage == 'evaluate' ? 'active bg-primary text-primary-content rounded-full' : ''}"><a
-                                href="/evaluate">Evaluate</a></li>
-                        <li th:classappend="${activePage == 'analyze' ? 'active bg-primary text-primary-content rounded-full' : ''}"><a
-                                href="/analyze">Analyze</a></li>
+                        <li th:classappend="${activePage == 'define' ? 'active bg-primary text-primary-content rounded-full' : ''}">
+                            <a
+                                    href="/define">Define</a></li>
+                        <li th:classappend="${activePage == 'configure' ? 'active bg-primary text-primary-content rounded-full' : ''}">
+                            <a
+                                    href="/configure">Configure</a></li>
+                        <li th:classappend="${activePage == 'evaluate' ? 'active bg-primary text-primary-content rounded-full' : ''}">
+                            <a
+                                    href="/evaluate">Evaluate</a></li>
+                        <li th:classappend="${activePage == 'analyze' ? 'active bg-primary text-primary-content rounded-full' : ''}">
+                            <a
+                                    href="/analyze">Analyze</a></li>
                     </ul>
                 </div>
             </div>
@@ -85,7 +96,7 @@
     </header>
 
     <main id="main" class="flex-1 py-10">
-        <div class="mx-auto max-w-7xl px-4 sm:px-6">
+        <div class="mx-auto max-w-7xl px-4 sm:px-6" >
             <th:block th:replace="${content}"></th:block>
         </div>
     </main>

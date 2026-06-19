@@ -1,19 +1,54 @@
 <html xmlns:th="http://www.thymeleaf.org"
-      th:replace="~{index :: layout(${activePage}, ~{::define-content}, ${hasNotifications})}">
+      th:replace="~{index :: layout('define', ~{::define-content},  ${hasNotifications})}">
 
-<div th:fragment="define-content">
-    <!-- Use a Hero component for a big welcome -->
-    <div class="hero rounded-2xl bg-base-100 shadow-xl">
-        <div class="hero-content text-center">
-            <div class="max-w-md">
-                <h1 class="text-5xl font-bold">Welcome to Beacon</h1>
-                <p class="py-6">
-                    This is the Define landing page for the Beacon application.
-                    Explore the features using the navigation above.
-                </p>
-                <button class="btn btn-primary">Get Started</button>
-            </div>
+
+<div th:fragment="define-content" class="max-w-6xl mx-auto">
+    <div x-data="{ activeTab: 'models' }" class="w-full">
+
+        <!-- Modern daisyUI v5 Tabs Container (Note: 'tabs-lifted' was renamed to 'tabs-lift') -->
+        <div role="tablist" class="tabs tabs-lift tabs-lg w-full" hx-target="#workspace" hx-swap="innerHTML">
+
+            <!-- Data Models Tab -->
+            <a role="tab" class="tab"
+               :class="{ 'tab-active': activeTab === 'models' }"
+               @click="activeTab = 'models'"
+               hx-get="/define/models">
+                Data Models
+            </a>
+
+            <!-- Rubrics Tab -->
+            <a role="tab" class="tab"
+               :class="{ 'tab-active': activeTab === 'rubrics' }"
+               @click="activeTab = 'rubrics'"
+               hx-get="/define/rubrics">
+                Rubrics
+            </a>
+
+            <!-- SAMs Tab -->
+            <a role="tab" class="tab"
+               :class="{ 'tab-active': activeTab === 'sams' }"
+               @click="activeTab = 'sams'"
+               hx-get="/define/sams">
+                SAMs
+            </a>
+
+            <!-- Transformations Tab -->
+            <a role="tab" class="tab"
+               :class="{ 'tab-active': activeTab === 'transformations' }"
+               @click="activeTab = 'transformations'"
+               hx-get="/define/transformations">
+                Transformations
+            </a>
+
         </div>
+
+        <!-- The content pane that links visually with the lifted border -->
+        <!-- Important: 'border-t-0' removes the double top border line -->
+        <div id="workspace"
+             class="bg-base-100 border border-base-300 border-t-0 rounded-b-box rounded-tr-box p-6 min-h-[500px]">
+            <th:block th:replace="~{fragments/define/models :: list}"></th:block>
+        </div>
+
     </div>
 </div>
 

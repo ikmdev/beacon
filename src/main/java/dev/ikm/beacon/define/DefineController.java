@@ -15,4 +15,24 @@ public class DefineController {
 		model.addAttribute("hasNotifications", newNotifications);
 		return "define";
 	}
+
+	@GetMapping("/define/models")
+	public String getModelsPage(Model model) {
+		return "fragments/define/models";
+	}
+
+	@GetMapping("/define/rubrics")
+	public String getRubricsPage(Model model) {;
+		return "fragments/define/rubrics";
+	}
+
+	@GetMapping("/define/sams")
+	public String getSAMsPage(Model model) {
+		return "fragments/define/sams";
+	}
+
+	@GetMapping("/define/transformations")
+	public String getTransformationsPage(Model model) {
+		return "fragments/define/transformations";
+	}
 }

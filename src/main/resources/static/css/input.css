@@ -1,9 +1,10 @@
 @import "tailwindcss";
 @plugin "daisyui";
 
-/* Tell Tailwind to scan your Thymeleaf templates for classes */
-@source "../../templates/**/*.html";
-@source "../../../java/**/*.java"; /* Scans for classes added in controllers */
+/* Force Tailwind v4 to look deeply into your resource paths */
+@source "src/main/resources/templates/**/*.html";
+@source "src/main/java/**/*.java";
+
 
 :root {
     color-scheme: light;
@@ -14,10 +15,9 @@ html[data-theme='night'] {
 }
 
 .hero-gradient {
-    background:
-        radial-gradient(circle at top right, rgba(59, 130, 246, 0.18), transparent 32%),
-        radial-gradient(circle at bottom left, rgba(14, 165, 233, 0.12), transparent 28%),
-        linear-gradient(180deg, rgba(255, 255, 255, 0.4), rgba(255, 255, 255, 0));
+    background: radial-gradient(circle at top right, rgba(59, 130, 246, 0.18), transparent 32%),
+    radial-gradient(circle at bottom left, rgba(14, 165, 233, 0.12), transparent 28%),
+    linear-gradient(180deg, rgba(255, 255, 255, 0.4), rgba(255, 255, 255, 0));
 }
 
 body {
@@ -62,13 +62,11 @@ body {
 
 @media (max-width: 640px) {
     .hero-gradient {
-        background:
-            radial-gradient(circle at top right, rgba(59, 130, 246, 0.14), transparent 45%),
-            linear-gradient(180deg, rgba(255, 255, 255, 0.3), rgba(255, 255, 255, 0));
+        background: radial-gradient(circle at top right, rgba(59, 130, 246, 0.14), transparent 45%),
+        linear-gradient(180deg, rgba(255, 255, 255, 0.3), rgba(255, 255, 255, 0));
     }
 
     .footer-link:hover {
         transform: none;
     }
 }
-
