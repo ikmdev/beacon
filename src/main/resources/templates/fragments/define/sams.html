@@ -1,7 +1,241 @@
-<html xmlns:th="http://www.thymeleaf.org">
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<body>
 
-<div th:fragment="list" class="max-w-6xl mx-auto">
+<!-- ============================================================================================================ -->
+<!-- SAM List Fragment                                                                                            -->
+<!-- ============================================================================================================ -->
+<div th:fragment="listContent">
+    <div class="card bg-base-100 shadow-xl border border-base-200">
+        <div class="card-body">
+            <div class="flex justify-between items-center">
+                <h2 class="card-title">Semantic Alignment Methods (SAMs)</h2>
+                <button class="btn btn-primary"
+                        hx-get="/define/sams/new"
+                        hx-target="#workspace"
+                        hx-swap="innerHTML">
+                    New SAM
+                </button>
+            </div>
 
+            <div class="overflow-x-auto mt-4">
+                <table class="table">
+                    <thead>
+                    <tr>
+                        <th>Name</th>
+                        <th>Description</th>
+                        <th>Type</th>
+                        <th>Source</th>
+                        <th></th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr th:each="sam : ${sams}">
+                        <td th:text="${sam.name}"></td>
+                        <td th:text="${sam.description}" class="max-w-md truncate"></td>
+                        <td>
+                            <span th:text="${sam.samType.name() == 'BUILT_IN' ? 'Built-in' : 'Custom'}"
+                                  th:classappend="${sam.samType.name() == 'BUILT_IN' ? 'badge-neutral' : 'badge-accent'}"
+                                  class="badge"></span>
+                        </td>
+                        <td>
+                            <span th:each="src, iter : ${sam.source}"
+                                  th:text="${src.name + (!iter.last ? ', ' : '')}"
+                                  class="text-xs text-base-content/70"></span>
+                        </td>
+                        <td class="text-right">
+                            <button class="btn btn-sm btn-ghost"
+                                    th:hx-get="@{/define/sams/{id}/edit(id=${sam.uniqueId})}"
+                                    hx-target="#workspace"
+                                    hx-swap="innerHTML">
+                                View / Edit
+                            </button>
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
 </div>
 
+
+<!-- ============================================================================================================ -->
+<!-- SAM Editor Fragment                                                                                          -->
+<!-- ============================================================================================================ -->
+<div th:fragment="editorContent"
+     th:with="isBuiltIn=${sam != null && sam.samType.name() == 'BUILT_IN'}">
+
+    <!-- Initialize Alpine.js data context -->
+    <div x-data="{ selectedInputType: '[[${sam?.inputType?.name()}]]' }">
+
+        <form hx-post="/api/define/sams"
+              hx-target="#workspace"
+              hx-swap="innerHTML"
+              class="card bg-base-100 shadow-xl border border-base-200">
+
+            <div class="card-body p-6 flex flex-col gap-6">
+
+                <!-- Header & Actions -->
+                <div class="flex justify-between items-start w-full">
+                    <div>
+                        <h2 class="card-title" th:text="${sam?.name ?: 'New SAM'}"></h2>
+                        <p th:if="${isBuiltIn}" class="text-warning font-semibold mt-1">This is a built-in SAM and
+                            cannot be edited.</p>
+                    </div>
+                    <div class="card-actions justify-end">
+                        <a th:href="@{/define/sams}" class="btn btn-ghost" hx-get="/define/sams" hx-target="#workspace" hx-swap="innerHTML">Cancel</a>
+                        <button type="submit" class="btn btn-primary" th:disabled="${isBuiltIn}">Save SAM</button>
+                    </div>
+                </div>
+
+                <!-- Main Details Grid -->
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-x-12 gap-y-4">
+                    <!-- Left Column -->
+                    <div class="flex flex-col gap-4">
+                        <div class="form-control grid grid-cols-[1fr,2fr] items-center">
+                            <label class="label pr-4"><span class="label-text font-semibold">Name</span></label>
+                            <input type="text" name="name" th:value="${sam?.name}" class="input input-bordered w-full"
+                                   required th:disabled="${isBuiltIn}"/>
+                        </div>
+                        <div class="form-control grid grid-cols-[1fr,2fr] items-center">
+                            <label class="label pr-4"><span class="label-text font-semibold">Mnemonic</span></label>
+                            <input type="text" name="mnemonic" th:value="${sam?.mnemonic}"
+                                   class="input input-bordered w-full" required th:disabled="${isBuiltIn}"/>
+                        </div>
+                        <div class="form-control grid grid-cols-[1fr,2fr] items-start">
+                            <label class="label pr-4 pt-2"><span
+                                    class="label-text font-semibold">Description</span></label>
+                            <textarea name="description" class="textarea textarea-bordered h-24 w-full"
+                                      th:text="${sam?.description}" th:disabled="${isBuiltIn}"></textarea>
+                        </div>
+                    </div>
+
+                    <!-- Right Column -->
+                    <div class="flex flex-col gap-4">
+                        <div class="form-control grid grid-cols-[1fr,2fr] items-center">
+                            <label class="label pr-4"><span
+                                    class="label-text font-semibold">Success Alias</span></label>
+                            <input type="text" name="successAlias" th:value="${sam?.successAlias}"
+                                   class="input input-bordered w-full" th:disabled="${isBuiltIn}"/>
+                        </div>
+                        <div class="form-control grid grid-cols-[1fr,2fr] items-center">
+                            <label class="label pr-4"><span
+                                    class="label-text font-semibold">Failure Alias</span></label>
+                            <input type="text" name="failureAlias" th:value="${sam?.failureAlias}"
+                                   class="input input-bordered w-full" th:disabled="${isBuiltIn}"/>
+                        </div>
+                        <div class="form-control grid grid-cols-[1fr,2fr] items-center">
+                            <label class="label pr-4"><span class="label-text font-semibold">Input Type</span></label>
+                            <select name="inputType" class="select select-bordered w-full" x-model="selectedInputType"
+                                    th:disabled="${isBuiltIn}">
+                                <option disabled th:selected="${sam?.inputType == null}">Select an input type</option>
+                                <option th:each="type : ${inputTypes}"
+                                        th:value="${type.name()}"
+                                        th:text="${type.value}"
+                                        th:selected="${type == sam?.inputType}"></option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Conditional PIQI Model Section -->
+                <div x-show="selectedInputType === 'ELEMENT' || selectedInputType === 'DATA_CLASS'" x-transition
+                     class="p-4 border border-dashed border-base-300 rounded-box bg-base-200/50">
+                    <h3 class="font-bold text-lg mb-2">PIQI Model Requirement</h3>
+                    <p class="text-sm mb-4 text-base-content/70">This input type requires a PIQI Model
+                        specification.</p>
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-x-6 gap-y-4">
+                        <div class="form-control">
+                            <label class="label"><span class="label-text">PIQI Model Mnemonic</span></label>
+                            <input type="text" name="piqiModel.modelMnemonic"
+                                   th:value="${sam?.piqiModel?.modelMnemonic}" class="input input-bordered"
+                                   th:disabled="${isBuiltIn}"/>
+                        </div>
+                        <div class="form-control">
+                            <label class="label"><span class="label-text">PIQI Model Version</span></label>
+                            <input type="text" name="piqiModel.modelVersion" th:value="${sam?.piqiModel?.modelVersion}"
+                                   class="input input-bordered" th:disabled="${isBuiltIn}"/>
+                        </div>
+                        <div class="form-control">
+                            <label class="label"><span class="label-text">PIQI Version Mnemonic</span></label>
+                            <input type="text" name="piqiModel.versionMnemonic"
+                                   th:value="${sam?.piqiModel?.versionMnemonic}" class="input input-bordered"
+                                   th:disabled="${isBuiltIn}"/>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Divider, Advanced Details, Parameters, Hidden Fields... -->
+                <div class="divider">Advanced</div>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-x-12 gap-y-4">
+                    <div class="form-control grid grid-cols-[1fr,2fr] items-center">
+                        <label class="label pr-4"><span class="label-text font-semibold">Prerequisite SAM</span></label>
+                        <input type="text" name="prerequisiteSAMMnemonic" th:value="${sam?.prerequisiteSAMMnemonic}"
+                               class="input input-bordered w-full" th:disabled="${isBuiltIn}"/>
+                    </div>
+                    <div class="form-control grid grid-cols-[1fr,2fr] items-center">
+                        <label class="label pr-4"><span class="label-text font-semibold">HDQT Dimension</span></label>
+                        <input type="text" name="hdqtDimensionMnemonic" th:value="${sam?.hdqtDimensionMnemonic}"
+                               class="input input-bordered w-full" th:disabled="${isBuiltIn}"/>
+                    </div>
+                    <div class="form-control grid grid-cols-[1fr,2fr] items-center">
+                        <label class="label pr-4"><span class="label-text font-semibold">Execution Type</span></label>
+                        <select name="executionType" class="select select-bordered w-full" th:disabled="${isBuiltIn}">
+                            <option disabled th:selected="${sam?.executionType == null}">Select an execution type
+                            </option>
+                            <option th:each="type : ${executionTypes}"
+                                    th:value="${type.name()}"
+                                    th:text="${type.value}"
+                                    th:selected="${type == sam?.executionType}"></option>
+                        </select>
+                    </div>
+                    <div class="form-control grid grid-cols-[1fr,2fr] items-center">
+                        <label class="label pr-4"><span class="label-text font-semibold">Execution Ref.</span></label>
+                        <input type="text" name="executionReference" th:value="${sam?.executionReference}"
+                               class="input input-bordered w-full" th:disabled="${isBuiltIn}"/>
+                    </div>
+                </div>
+
+                <div class="collapse collapse-arrow border border-base-300 bg-base-200">
+                    <input type="checkbox" th:checked="${sam != null and !sam.parameters.isEmpty()}"/>
+                    <div class="collapse-title text-xl font-medium">Parameters</div>
+                    <div class="collapse-content bg-base-100">
+                        <div th:if="${sam == null or sam.parameters.isEmpty()}"
+                             class="p-4 text-center text-base-content/60">This SAM has no parameters.
+                        </div>
+                        <div th:if="${sam != null and !sam.parameters.isEmpty()}" class="overflow-x-auto">
+                            <table class="table table-zebra">
+                                <thead>
+                                <tr>
+                                    <th>Name</th>
+                                    <th>Type</th>
+                                    <th>Description</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                <tr th:each="parameter : ${sam.parameters}">
+                                    <td th:text="${parameter.name}"></td>
+                                    <td><span class="badge badge-neutral"
+                                              th:text="${parameter.type.displayName}"></span></td>
+                                    <td th:text="${parameter.description}"></td>
+                                </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Hidden fields -->
+                <input type="hidden" name="uniqueId" th:value="${sam?.uniqueId}"/>
+                <input type="hidden" name="createdDateTime" th:value="${sam?.createdDateTime}"/>
+                <input type="hidden" name="modifiedDateTime" th:value="${sam?.modifiedDateTime}"/>
+                <input type="hidden" name="samType" th:value="${sam?.samType ?: 'CUSTOM'}"/>
+            </div>
+        </form>
+    </div>
+</div>
+
+</body>
 </html>
