@@ -1,4 +1,4 @@
-package dev.ikm.beacon.analyze;
+package dev.ikm.beacon.web.analyze;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;

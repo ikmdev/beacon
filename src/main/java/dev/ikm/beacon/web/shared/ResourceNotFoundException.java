@@ -1,4 +1,4 @@
-package dev.ikm.beacon.shared;
+package dev.ikm.beacon.web.shared;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ResponseStatus;

@@ -1,4 +1,4 @@
-package dev.ikm.beacon.home;
+package dev.ikm.beacon.web.home;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
