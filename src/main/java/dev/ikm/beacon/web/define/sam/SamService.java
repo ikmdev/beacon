@@ -34,12 +34,17 @@ public class SamService {
 				"samRecord.samBasicDetails.uniqueId must not be null"
 		);
 
-		if (existsById(id)) {
-			throw new IllegalArgumentException("SAM with ID " + id + " already exists");
+		// Upsert: replace existing by id, else append
+		for (int i = 0; i < samRecords.size(); i++) {
+			SamRecord existing = samRecords.get(i);
+			if (existing.samBasicDetails().uniqueId().equals(id)) {
+				samRecords.set(i, samRecord);
+				return samRecord;
+			}
 		}
 
+		// If we reach here, it's a completely new SAM
 		samRecords.add(samRecord);
-
 		return samRecord;
 	}
 
