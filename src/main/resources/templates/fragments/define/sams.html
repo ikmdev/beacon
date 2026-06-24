@@ -119,15 +119,13 @@
                     <!-- Right Column -->
                     <div class="flex flex-col gap-4">
                         <div class="form-control grid grid-cols-[1fr,2fr] items-center">
-                            <label class="label pr-4"><span
-                                    class="label-text font-semibold">Success Alias</span></label>
+                            <label class="label pr-4"><span class="label-text font-semibold">Success Alias</span></label>
                             <input type="text" name="samBasicDetails.successAlias"
                                    th:value="${sam?.samBasicDetails?.successAlias}"
                                    class="input input-bordered w-full" th:disabled="${isBuiltIn}"/>
                         </div>
                         <div class="form-control grid grid-cols-[1fr,2fr] items-center">
-                            <label class="label pr-4"><span
-                                    class="label-text font-semibold">Failure Alias</span></label>
+                            <label class="label pr-4"><span class="label-text font-semibold">Failure Alias</span></label>
                             <input type="text" name="samBasicDetails.failureAlias"
                                    th:value="${sam?.samBasicDetails?.failureAlias}"
                                    class="input input-bordered w-full" th:disabled="${isBuiltIn}"/>
@@ -178,6 +176,15 @@
                         </div>
                     </div>
                 </div>
+
+                <!-- Divider -->
+                <div class="divider">Sources</div>
+
+                <!-- ================================================== -->
+                <!-- SOURCES FRAGMENT LOADER                            -->
+                <!-- ================================================== -->
+                <div th:replace="~{:: sourcesFragment(sam=${sam}, isBuiltIn=${isBuiltIn})}"></div>
+
 
                 <!-- Divider -->
                 <div class="divider">Parameters</div>
@@ -236,6 +243,91 @@
                        th:value="${sam?.samRuntimeDetails?.type ?: 'CUSTOM'}"/>
             </div>
         </form>
+    </div>
+</div>
+
+
+<!-- ============================================================================================================ -->
+<!-- Sources Fragment (for HTMX swapping)                                                                         -->
+<!-- ============================================================================================================ -->
+<div th:fragment="sourcesFragment(sam, isBuiltIn)" id="sources-editor" class="flex flex-col gap-4">
+
+    <div th:if="${sam == null or sam.samBasicDetails == null or sam.samBasicDetails.source == null or sam.samBasicDetails.source.isEmpty()}"
+         class="p-4 text-center text-base-content/60 bg-base-200 rounded-box">
+        This SAM has no sources.
+    </div>
+
+    <!-- Source Table -->
+    <div th:if="${sam != null and sam.samBasicDetails != null and sam.samBasicDetails.source != null and !sam.samBasicDetails.source.isEmpty()}"
+         class="overflow-x-auto">
+        <table class="table w-full">
+            <thead>
+            <tr>
+                <th>Name</th>
+                <th>PIQI Alliance Member UID</th>
+                <th class="w-1"></th> <!-- Action column -->
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="src, stat : ${sam.samBasicDetails.source}">
+                <!-- Name Input -->
+                <td>
+                    <input type="text" th:name="|samBasicDetails.source[${stat.index}].name|"
+                           th:value="${src.name}"
+                           class="input input-bordered w-full" placeholder="Source Name" th:disabled="${isBuiltIn}">
+                </td>
+                <!-- UID Input -->
+                <td>
+                    <input type="text" th:name="|samBasicDetails.source[${stat.index}].piqiAllianceMemberUid|"
+                           th:value="${src.piqiAllianceMemberUid}"
+                           class="input input-bordered w-full" placeholder="PIQI Member UID"
+                           th:disabled="${isBuiltIn}">
+                </td>
+                <!-- Remove Button -->
+                <td>
+                    <button type="button"
+                            th:hx-post="@{/define/sams/remove-source(removeIndex=${stat.index})}"
+                            hx-target="#sources-editor"
+                            hx-swap="outerHTML"
+                            hx-include="closest form"
+                            class="btn btn-ghost btn-sm btn-circle"
+                            th:disabled="${isBuiltIn}">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24"
+                             stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                  d="M6 18L18 6M6 6l12 12"/>
+                        </svg>
+                    </button>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <!-- Add/Save Actions -->
+    <div class="card-actions justify-between mt-2">
+        <button type="button"
+                hx-post="/define/sams/add-source"
+                hx-target="#sources-editor"
+                hx-swap="outerHTML"
+                hx-include="closest form"
+                class="btn btn-secondary btn-sm"
+                th:disabled="${isBuiltIn}">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24"
+                 stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/>
+            </svg>
+            Add Source
+        </button>
+        <button type="button"
+                hx-post="/define/sams/update-sources"
+                hx-target="#sources-editor"
+                hx-swap="outerHTML"
+                hx-include="closest form"
+                class="btn btn-primary btn-sm"
+                th:disabled="${isBuiltIn}">
+            Save Sources
+        </button>
     </div>
 </div>
 

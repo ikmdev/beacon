@@ -70,6 +70,36 @@ public class SamController {
 		return "fragments/define/sams :: parametersFragment";
 	}
 
+	@PostMapping("/define/sams/add-source")
+	public String addSource(@ModelAttribute SamRecord sam, Model model) {
+		if (sam.samBasicDetails() != null && sam.samBasicDetails().source() != null) {
+			sam.samBasicDetails().source().add(new dev.ikm.beacon.web.define.sam.details.SamBasicDetails.Source(null, null));
+		}
+		model.addAttribute("sam", sam);
+		return "fragments/define/sams :: sourcesFragment";
+	}
+
+	@PostMapping("/define/sams/remove-source")
+	public String removeSource(@ModelAttribute SamRecord sam, @RequestParam("removeIndex") int index, Model model) {
+		if (sam.samBasicDetails() != null && sam.samBasicDetails().source() != null) {
+			if (index >= 0 && index < sam.samBasicDetails().source().size()) {
+				sam.samBasicDetails().source().remove(index);
+			}
+		}
+		model.addAttribute("sam", sam);
+		return "fragments/define/sams :: sourcesFragment";
+	}
+
+	@PostMapping("/define/sams/update-sources")
+	public String updateSources(@ModelAttribute SamRecord sam, Model model) {
+		if (sam.samBasicDetails() != null && sam.samBasicDetails().uniqueId() != null
+				&& sam.samBasicDetails().source() != null) {
+			samService.updateSources(sam.samBasicDetails().uniqueId(), sam.samBasicDetails().source());
+		}
+		model.addAttribute("sam", sam);
+		return "fragments/define/sams :: sourcesFragment";
+	}
+
 	/**     * HTMX action for saving the parameter list back to the server.     */
 	@PostMapping("/define/sams/update-parameters")
 	public String updateParameter(@ModelAttribute SamRecord sam, Model model) {

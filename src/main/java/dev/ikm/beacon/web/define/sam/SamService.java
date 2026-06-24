@@ -9,6 +9,7 @@ import java.time.Instant;
 import java.util.*;
 
 
+
 @Service
 public class SamService {
 
@@ -104,6 +105,14 @@ public class SamService {
 		samRecord.ifPresent(record -> {
 			record.samAdvanceDetails().parameters().clear();
 			record.samAdvanceDetails().parameters().addAll(parameters);
+		});
+	}
+
+	public void updateSources(UUID id, List<SamBasicDetails.Source> sources) {
+		Optional<SamRecord> samRecord = findById(id);
+		samRecord.ifPresent(record -> {
+			record.samBasicDetails().source().clear();
+			record.samBasicDetails().source().addAll(sources);
 		});
 	}
 
