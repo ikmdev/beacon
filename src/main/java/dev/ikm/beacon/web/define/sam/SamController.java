@@ -90,28 +90,6 @@ public class SamController {
 		return "fragments/define/sams :: sourcesFragment";
 	}
 
-	@PostMapping("/define/sams/update-sources")
-	public String updateSources(@ModelAttribute SamRecord sam, Model model) {
-		if (sam.samBasicDetails() != null && sam.samBasicDetails().uniqueId() != null
-				&& sam.samBasicDetails().source() != null) {
-			samService.updateSources(sam.samBasicDetails().uniqueId(), sam.samBasicDetails().source());
-		}
-		model.addAttribute("sam", sam);
-		return "fragments/define/sams :: sourcesFragment";
-	}
-
-	/**     * HTMX action for saving the parameter list back to the server.     */
-	@PostMapping("/define/sams/update-parameters")
-	public String updateParameter(@ModelAttribute SamRecord sam, Model model) {
-		if (sam.samBasicDetails() != null && sam.samBasicDetails().uniqueId() != null 
-				&& sam.samAdvanceDetails() != null) {
-			samService.updateParameters(sam.samBasicDetails().uniqueId(), sam.samAdvanceDetails().parameters());
-		}
-		model.addAttribute("sam", sam);
-
-		return "fragments/define/sams :: parametersFragment";
-	}
-
 	@DeleteMapping("/define/sams/{id}")
 	public String deleteSamById(@PathVariable UUID id, Model model) {
 		samService.deleteById(id);

@@ -319,15 +319,6 @@
             </svg>
             Add Source
         </button>
-        <button type="button"
-                hx-post="/define/sams/update-sources"
-                hx-target="#sources-editor"
-                hx-swap="outerHTML"
-                hx-include="closest form"
-                class="btn btn-primary btn-sm"
-                th:disabled="${isBuiltIn}">
-            Save Sources
-        </button>
     </div>
 </div>
 
@@ -420,15 +411,6 @@
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/>
             </svg>
             Add Parameter
-        </button>
-        <button type="button"
-                hx-post="/define/sams/update-parameters"
-                hx-target="#parameters-editor"
-                hx-swap="outerHTML"
-                hx-include="closest form"
-                class="btn btn-primary btn-sm"
-                th:disabled="${isBuiltIn}">
-            Save Parameters
         </button>
     </div>
 </div>
